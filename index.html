@@ -8,14 +8,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#8b5cf6">
-    <meta name="apple-mobile-web-app-title" content="NeuroLingua">
+    <meta name="apple-mobile-web-app-title" content="Profe Inglés">
     
     <title>NeuroLingua Pro - CapacitiumX</title>
 
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/3426/3426224.png">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3426/3426224.png">
-
-    <link rel="manifest" href='data:application/manifest+json;base64,ewogICJuYW1lIjogIk5ldXJvTGluZ3VhIFByb2ZlIEluZ2zDqXMiLAogICJzaG9ydF9uYW1lIjogIk5ldXJvTGluZ3VhIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZjE3MmEiLAogICJ0aGVtZV9jb2xvciI6ICIjOGI1Y2Y2IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMzQyNi8zNDI2MjI0LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgogICAgfQogIF0KfQ=='>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -49,12 +47,16 @@
         @media (max-width: 800px) {
             .layout { flex-direction: column; }
             .left-panel { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 2px solid #334155; }
+            .flashcard { height: auto !important; min-height: 400px; }
         }
 
         .brand { font-size: 1.5rem; font-weight: 900; color: var(--accent); text-align: center; letter-spacing: 2px; }
+        
         .config-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px solid #334155; }
         
         button { cursor: pointer; padding: 12px; border-radius: 8px; border: none; font-weight: bold; color: white; transition: 0.3s; margin-bottom: 5px; }
+        button:active { transform: scale(0.95); }
+
         .btn-purple { background: var(--primary); width: 100%; }
         .btn-green { background: var(--green); width: 100%; }
         .btn-red { background: var(--red); width: 100%; }
@@ -81,8 +83,8 @@
         .eval-bar { display: flex; gap: 15px; width: 100%; max-width: 550px; }
         .btn-eval { flex: 1; padding: 15px; font-size: 1rem; border-radius: 12px; }
 
-        #visualList { margin-top: 15px; max-height: 250px; overflow-y: auto; border: 1px solid #334155; border-radius: 8px; background: #0f172a; }
-        .list-item { padding: 10px; border-bottom: 1px solid #334155; cursor: pointer; font-size: 0.9rem; }
+        #visualList { margin-top: 15px; max-height: 300px; overflow-y: auto; border: 1px solid #334155; border-radius: 8px; }
+        .list-item { padding: 10px; border-bottom: 1px solid #334155; cursor: pointer; }
         .list-item:hover { background: #334155; }
     </style>
 </head>
@@ -96,16 +98,16 @@
             <button class="btn-green" style="margin-top:10px" onclick="generatePDF()">📄 DESCARGAR PDF</button>
         </div>
         <div id="visualList"></div>
-        <button class="btn-red" onclick="localStorage.clear(); location.reload();" style="margin-top: 20px; width: 100%;">VACIAR TODO</button>
+        <button class="btn-red" onclick="localStorage.clear(); location.reload();">VACIAR TODO</button>
     </div>
 
     <div class="right-panel">
         <div class="flashcard">
             <div class="img-area"><img id="cardImg" class="real-img" src="https://via.placeholder.com/500?text=NeuroLingua" alt="Cargando"></div>
             <div class="info-area">
-                <h1 id="wordEn" class="word-en">Welcome!</h1>
-                <div id="wordEs" class="word-es">¡Bienvenido!</div>
-                <div style="color: #94a3b8; font-style: italic;" id="sentence">Carga tu lista para empezar.</div>
+                <h1 id="wordEn" class="word-en">Hello!</h1>
+                <div id="wordEs" class="word-es">Hola</div>
+                <div style="color: #94a3b8; font-style: italic;" id="sentence">Carga palabras para empezar a estudiar.</div>
             </div>
         </div>
 
@@ -118,8 +120,8 @@
 
 <div id="modalLoad" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; justify-content:center; align-items:center;">
     <div style="background:var(--panel); padding:25px; border-radius:20px; width:90%; max-width:500px; border:1px solid var(--primary);">
-        <h3 style="margin-top:0">Pegar Lista de Inglés</h3>
-        <textarea id="bulkText" style="height:200px; width:100%; background:#0f172a; color:white; border:1px solid #334155; padding:10px; box-sizing:border-box;" placeholder="Escribe palabras una por linea..."></textarea>
+        <h3 style="margin-top:0">Pegar Lista</h3>
+        <textarea id="bulkText" style="height:200px; width:100%; background:#0f172a; color:white; border:1px solid #334155; padding:10px; box-sizing:border-box;" placeholder="Apple&#10;House&#10;Car"></textarea>
         <div style="display:flex; gap:10px; margin-top:15px;">
             <button class="btn-red" style="flex:1" onclick="document.getElementById('modalLoad').style.display='none'">Cerrar</button>
             <button class="btn-green" style="flex:1" onclick="processBulk()">CARGAR ⚡</button>
@@ -174,32 +176,19 @@
     }
 
     function nextCard() {
-        if(app.fullList.length === 0) return;
         app.index = (app.index + 1) % app.fullList.length;
         updateCardUI();
     }
 
     function generatePDF() {
-        if(app.fullList.length === 0) return alert("Carga palabras primero");
+        if(app.fullList.length === 0) return alert("Primero carga palabras");
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFontSize(20);
-        doc.text("CAPACITIUMX - Lista de Vocabulario", 10, 20);
-        doc.setFontSize(12);
+        doc.text("Lista de Vocabulario - Profe Inglés", 10, 10);
         app.fullList.forEach((item, i) => {
-            doc.text(`${i+1}. ${item.en} - ${item.es}`, 10, 35 + (i * 10));
+            doc.text(`${i+1}. ${item.en}`, 10, 20 + (i * 10));
         });
-        doc.save("MiVocabulario.pdf");
-    }
-
-    // REGISTRO DE SERVICE WORKER PARA ACTIVAR INSTALACIÓN REAL
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCode = `self.addEventListener('fetch', function(event) {});`;
-            const blob = new Blob([swCode], {type: 'application/javascript'});
-            const url = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(url);
-        });
+        doc.save("vocabulario.pdf");
     }
 </script>
 </body>
